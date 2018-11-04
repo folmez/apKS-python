@@ -34,6 +34,7 @@ def gsdf(*varargin):
     else:
         print('Unexpected data name')
 
+    return T
 # def calc_PDF_vals(type, PDFx):
 #     # Calculate PDF values at given points for synthetic distributions
 #
