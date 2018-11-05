@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
 # define errors
 class Error(Exception):
@@ -41,7 +42,6 @@ def papod(*varargin):
         except UnexpectedInputs:
             print('Input:', varargin[i])
             print('Error in <papod.py>: Unexpected inputs!')
-            import sys
             sys.exit(1)
         i = i+2
 
@@ -51,7 +51,6 @@ def papod(*varargin):
             raise DataSetContainsZero
     except:
         print('Error in <papod.py>: Your data set contains zero!')
-        import sys
         sys.exit(1)
 
     # Model
@@ -75,6 +74,26 @@ def papod(*varargin):
     Xn = Xn/n
 
     # Approximate PDF of data
-    plt.loglog(Xx, Xn, basex=np.e, basey=np.e)
-    plt.draw()
+    approximate_PDF_label = f'Approx PDF ({n} pts)'
+    plt.loglog(Xx, Xn, 'b.', basex=10, basey=10, label=approximate_PDF_label)
+    try:
+        xmin
+    except NameError:
+        # xmin is not defined
+        print('No power-law fit is input.')
+    else:
+        i1 = np.where(Xx>=xmin)[0][0]   # first idx in the power-law region
+        i2 =np.where(Xx<=xmax)[0][-1]   # last idx in the power-law region
+
+        C_hat = np.mean( Xn[i1:i2+1] * ( Xx[i1:i2+1] ** alpha ) )
+        y0 = C_hat * 1 / ( xmin ** alpha )
+        y1 = C_hat * 1 / ( xmax ** alpha )
+        pl_vs_data_percentage = \
+                        np.round( np.sum((xmin<=X) & (X<=xmax)) / len(X) *100)
+        theoretical_PDF_title = \
+                f'PL(%{pl_vs_data_percentage}):[{xmin},{xmax}], alpha={alpha}'
+        plt.loglog([xmin, xmax], [y0, y1], 'ro-',\
+                                    label=theoretical_PDF_title, linewidth=2.0);
+    plt.title(data_title)
+    plt.legend()
     plt.show()

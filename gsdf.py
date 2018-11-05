@@ -9,7 +9,7 @@ def gsdf(*varargin):
     # GSDF generates synthetic data using CDF.
 
     # Input arguments
-    type = varargin[0]
+    data_type = varargin[0]
     n = varargin[3]
     plot_log_log_pdf = varargin[4]
 
@@ -17,7 +17,7 @@ def gsdf(*varargin):
     rng_seed = np.random.randint(1,1000000)
     np.random.seed(rng_seed)
 
-    if type == 'EPL1':
+    if data_type == 'EPL1':
         # Exact power-law in an interval
         alpha = varargin[1]     # power-law exponent
         xmin = varargin[2][0]   # power-law upper bound
@@ -28,11 +28,10 @@ def gsdf(*varargin):
         C = (1-alpha) / ( M**(1-alpha) - xmin**(1-alpha) );
 
         U = np.random.rand(n)
-        T = list( map( lambda x : \
-            ((1-alpha)*x/C + xmin**(1-alpha))**(1/(1-alpha)) , U ) )
-
+        T = ( (1-alpha) * U/C + xmin**(1-alpha) ) ** ( 1/(1-alpha) )
     else:
         print('Unexpected data name')
+
 
     return T
 # def calc_PDF_vals(type, PDFx):
