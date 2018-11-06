@@ -23,6 +23,7 @@ def papod(*varargin):
     data_title = 'Untitled data'
     nr_bins = np.amin([round(len(X)*0.1), 50])
     density_color = 'b'
+    plot_stuff = True
 
     i = 1
     while i<len(varargin):
@@ -37,6 +38,8 @@ def papod(*varargin):
                     von = 1 # assume statistically valid
                 else:
                     von = varargin[i+1][3] # statistical validity inputted
+            elif varargin[i] == 'plot_stuff':
+                plot_stuff = varargin[i+1]
             else:
                 raise UnexpectedInputs
         except UnexpectedInputs:
@@ -75,12 +78,13 @@ def papod(*varargin):
 
     # Approximate PDF of data
     approximate_PDF_label = f'Approx PDF ({n} pts)'
+    approx_PDF_fig = plt.figure()
     plt.loglog(Xx, Xn, 'b.', basex=10, basey=10, label=approximate_PDF_label)
     try:
         xmin
     except NameError:
         # xmin is not defined
-        print('No power-law fit is input.')
+        temp = 0
     else:
         i1 = np.where(Xx>=xmin)[0][0]   # first idx in the power-law region
         i2 =np.where(Xx<=xmax)[0][-1]   # last idx in the power-law region
@@ -90,10 +94,13 @@ def papod(*varargin):
         y1 = C_hat * 1 / ( xmax ** alpha )
         pl_vs_data_percentage = \
                         np.round( np.sum((xmin<=X) & (X<=xmax)) / len(X) *100)
-        theoretical_PDF_title = \
+        pl_fit_title = \
                 f'PL(%{pl_vs_data_percentage}):[{xmin},{xmax}], alpha={alpha}'
         plt.loglog([xmin, xmax], [y0, y1], 'ro-',\
-                                    label=theoretical_PDF_title, linewidth=2.0);
+                                    label=pl_fit_title, linewidth=2.0)
     plt.title(data_title)
     plt.legend()
-    plt.show()
+    if plot_stuff:
+        plt.show()
+
+    return Xn, Xx, approx_PDF_fig
