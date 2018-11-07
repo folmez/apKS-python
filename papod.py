@@ -1,24 +1,24 @@
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
 
 # define errors
 class Error(Exception):
-   """Base class for other exceptions"""
-   pass
+    """Base class for other exceptions"""
+    pass
 
 class UnexpectedInputs(Error):
-   """Unexpected inputs!"""
-   pass
+    """Unexpected inputs!"""
+    pass
 
 class DataSetContainsZero(Error):
-   """Your data set contains zero!"""
-   pass
+    """Your data set contains zero!"""
+    pass
 
 def papod(*varargin):
 
     # Input arguments
-    X = varargin[0];
+    X = varargin[0]
 
     data_title = 'Untitled data'
     nr_bins = np.amin([round(len(X)*0.1), 50])
@@ -26,7 +26,7 @@ def papod(*varargin):
     plot_stuff = True
 
     i = 1
-    while i<len(varargin):
+    while i < len(varargin):
         try:
             if varargin[i] == 'data_title':
                 data_title = varargin[i+1]
@@ -52,13 +52,13 @@ def papod(*varargin):
     try:
         if 0 in X:
             raise DataSetContainsZero
-    except:
+    except DataSetContainsZero:
         print('Error in <papod.py>: Your data set contains zero!')
         sys.exit(1)
 
     # Model
     n = len(X)
-    bin_edges = np.logspace(np.log10(min(X)), np.log10(max(X)+1e-10), nr_bins);
+    bin_edges = np.logspace(np.log10(min(X)), np.log10(max(X)+1e-10), nr_bins)
 
     if  np.array_equiv(X, np.floor(X)) and n < 500:
         # Small integer data set
@@ -71,7 +71,7 @@ def papod(*varargin):
     else:
         Xn, bin_edges = np.histogram(X, bins=bin_edges)
         Xn = Xn / np.diff(bin_edges)
-        Xx =  np.add( bin_edges[0:len(bin_edges)-1], bin_edges[1:len(bin_edges)])/2
+        Xx = np.add(bin_edges[0:len(bin_edges)-1], bin_edges[1:len(bin_edges)])/2
 
     # Normalize
     Xn = Xn/n
@@ -86,14 +86,14 @@ def papod(*varargin):
         # xmin is not defined
         temp = 0
     else:
-        i1 = np.where(Xx>=xmin)[0][0]   # first idx in the power-law region
-        i2 =np.where(Xx<=xmax)[0][-1]   # last idx in the power-law region
+        i1 = np.where(Xx >= xmin)[0][0]   # first idx in the power-law region
+        i2 = np.where(Xx <= xmax)[0][-1]   # last idx in the power-law region
 
-        C_hat = np.mean( Xn[i1:i2+1] * ( Xx[i1:i2+1] ** alpha ) )
-        y0 = C_hat * 1 / ( xmin ** alpha )
-        y1 = C_hat * 1 / ( xmax ** alpha )
+        C_hat = np.mean(Xn[i1:i2+1] * (Xx[i1:i2+1] ** alpha))
+        y0 = C_hat * 1 / (xmin ** alpha)
+        y1 = C_hat * 1 / (xmax ** alpha)
         pl_vs_data_percentage = \
-                        np.round( np.sum((xmin<=X) & (X<=xmax)) / len(X) *100)
+                        np.round(np.sum((xmin <= X) & (X <= xmax)) / len(X) *100)
         pl_fit_title = \
                 f'PL(%{pl_vs_data_percentage}):[{xmin},{xmax}], alpha={alpha}'
         plt.loglog([xmin, xmax], [y0, y1], 'ro-',\
