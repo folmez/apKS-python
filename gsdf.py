@@ -26,12 +26,33 @@ def gsdf(*varargin):
         xmin_pl = varargin[2][0]   # power-law upper bound
         M_pl = varargin[2][1]      # power-law lower bound
         # Set random sample title
-        data_title = f"EPL1({n_data}pts): PL({alpha_pl}) in [{xmin_pl}, {M_pl}]"
+        data_title = \
+                f"EPL1({n_data}pts): PL({alpha_pl}) in [{xmin_pl}, {M_pl}]"
 
         # Generate random sample
         C_pl = (1-alpha_pl) / (M_pl**(1-alpha_pl) - xmin_pl**(1-alpha_pl))
         U = np.random.rand(n_data)
         T = ((1-alpha_pl) * U/C_pl + xmin_pl**(1-alpha_pl)) ** (1/(1-alpha_pl))
+
+    elif data_type == 'EPL2':
+        # Exact power-law in an interval with sharp transitions to non-PL
+        alpha_pl = varargin[1]          # power-law exponent
+        # ??? Write this in one line
+        if len(varargin[2]) == 2:
+            t0 = 0
+        elif len(varargin[2]) ==3:
+            t0 = varargin[2][0]
+        xmin_pl = varargin[2][-2]       # power-law lower bound
+        M_pl = varargin[2][-1]          # power-law upper bound
+
+        # The exponential decay in the tail
+        beta = alpha * np.log_natural(M_pl/xmin_pl) / (M_pl-xmin_pl)
+
+        # Set random sample title
+        data_title = \
+            f"EPL2({n_data}pts): PL({alpha_pl}) in [{xmin_pl}, {M_pl}], exp({beta}) otherwise"
+
+
 
     else:
         print('Unexpected data name')
@@ -58,5 +79,5 @@ def gsdf(*varargin):
         plt.draw()
         plt.show()
 
-    # Return random sample
-    return T
+    # Return a sorted random sample
+    return np.sort(T)

@@ -2,7 +2,8 @@
 Python scripts for the apKS project
 
 version 0.0.1
-- November 6, 2018: Theoretical PDF drawing of random samples is added
+- November 10, 2018: Power-law exponent estimation using maximum-likelihood is added (estexp). Choosing an almost logarithmically equally spaced subset of a sample is added (elspd). Estimating KS distance between empirical sample CDF and theoretical power-law PDF is added (estKS). Also, a testing module (test_apKS.py) is added that works in the pytest framework.
+- November 6, 2018: Theoretical PDF drawing of random samples is added.
 - November 5, 2018: Power-law fit PDF drawing on top of approximate PDF is added.
 - November 4, 2018: Approximate PDF drawing is added.
 - November 1, 2018: Exact power-law 1 (EPL1) random sample generation is added.

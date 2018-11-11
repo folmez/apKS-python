@@ -2,19 +2,6 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-# define errors
-class Error(Exception):
-    """Base class for other exceptions"""
-    pass
-
-class UnexpectedInputs(Error):
-    """Unexpected inputs!"""
-    pass
-
-class DataSetContainsZero(Error):
-    """Your data set contains zero!"""
-    pass
-
 def papod(*varargin):
 
     # Input arguments
@@ -27,31 +14,27 @@ def papod(*varargin):
 
     i = 1
     while i < len(varargin):
-        try:
-            if varargin[i] == 'data_title':
-                data_title = varargin[i+1]
-            elif varargin[i] == 'nr_bins':
-                nr_bins = varargin[i+1]
-            elif varargin[i] == 'power-law fit':
-                [alpha, xmin, xmax] = varargin[i+1][0:3]
-                if len(varargin[i+1]) == 3:
-                    von = 1 # assume statistically valid
-                else:
-                    von = varargin[i+1][3] # statistical validity inputted
-            elif varargin[i] == 'plot_stuff':
-                plot_stuff = varargin[i+1]
+        if varargin[i] == 'data_title':
+            data_title = varargin[i+1]
+        elif varargin[i] == 'nr_bins':
+            nr_bins = varargin[i+1]
+        elif varargin[i] == 'power-law fit':
+            [alpha, xmin, xmax] = varargin[i+1][0:3]
+            if len(varargin[i+1]) == 3:
+                von = 1 # assume statistically valid
             else:
-                raise UnexpectedInputs
-        except UnexpectedInputs:
+                von = varargin[i+1][3] # statistical validity inputted
+        elif varargin[i] == 'plot_stuff':
+            plot_stuff = varargin[i+1]
+        else:
             print('Input:', varargin[i])
             print('Error in <papod.py>: Unexpected inputs!')
             sys.exit(1)
         i = i+2
 
-    # Check Inputs
+    # Stop if data sample contains 0
     try:
-        if 0 in X:
-            raise DataSetContainsZero
+        np.testing.assert_equal(0 not in X, True)
     except DataSetContainsZero:
         print('Error in <papod.py>: Your data set contains zero!')
         sys.exit(1)
@@ -84,7 +67,7 @@ def papod(*varargin):
         xmin
     except NameError:
         # xmin is not defined
-        temp = 0
+        pass
     else:
         i1 = np.where(Xx >= xmin)[0][0]   # first idx in the power-law region
         i2 = np.where(Xx <= xmax)[0][-1]   # last idx in the power-law region
