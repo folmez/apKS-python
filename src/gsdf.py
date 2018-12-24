@@ -4,7 +4,8 @@
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-from papod import papod
+import src
+# from papod import papod
 
 def gsdf(*varargin):
     # GSDF generates synthetic data using CDF.
@@ -52,15 +53,13 @@ def gsdf(*varargin):
         data_title = \
             f"EPL2({n_data}pts): PL({alpha_pl}) in [{xmin_pl}, {M_pl}], exp({beta}) otherwise"
 
-
-
     else:
         print('Unexpected data name')
 
     # Plot
     if plot_log_log_pdf:
         # Calculate and plot empirical PDF
-        _, PDFx, ePDF_fig = papod(T, 'data_title', data_title, \
+        _, PDFx, ePDF_fig = src.papod(T, 'data_title', data_title, \
                                                         'plot_stuff', False)
 
         # Calculate true PDF
