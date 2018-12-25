@@ -39,7 +39,7 @@ def gsbd(X, alpha, xmin, xmax, X_data_type):
 def gen_power_law_sample(a, xmin, xmax, n):
     U = np.random.rand(n)
     if not np.isclose(a, 1.0):
-        b = 1-a
-        return (U * (xmax**b-xmin**b) + xmin**b) ** (1/b)
+        b = 1.0-a
+        return (U * (xmax**b-xmin**b) + xmin**b) ** (1.0/b)
     else:
         return np.exp( U * (np.log(xmax)-np.log(xmin)) + np.log(xmin) )
