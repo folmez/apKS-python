@@ -1,6 +1,11 @@
 # apKS-python
 Python scripts for the apKS project
 
+TO-DO
+
+1) Implement random samples other than EPL1
+
+- December 25, 2018: p-value estimation is implemented
 - December 25, 2018: KS method for bounded power-law fitting implemented
 - December 24, 2018: Semiparametric bootstrap sample generation implemented
 - December 24, 2018: Repository organized

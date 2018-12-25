@@ -6,3 +6,6 @@ from .papod import papod
 from .gsdf import gsdf
 from .gsbd import gsbd
 from .penKS import penKS
+from .estpval import estpval
+
+P_VAL_THRESHOLD = 0.10
