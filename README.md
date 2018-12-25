@@ -1,6 +1,8 @@
 # apKS-python
 Python scripts for the apKS project
 
+- December 25, 2018: KS method for bounded power-law fitting implemented
+- December 24, 2018: Semiparametric bootstrap sample generation implemented
 - December 24, 2018: Repository organized
 - November 10, 2018: Power-law exponent estimation using maximum-likelihood is added (estexp). Choosing an almost logarithmically equally spaced subset of a sample is added (elspd). Estimating KS distance between empirical sample CDF and theoretical power-law PDF is added (estKS). Also, a testing module (test_apKS.py) is added that works in the pytest framework.
 - November 6, 2018: Theoretical PDF drawing of random samples is added.
