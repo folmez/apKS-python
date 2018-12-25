@@ -1,7 +1,7 @@
 import numpy as np
 import src
 
-def test_KS_distance_is_worse_when_power_law_exponent_is_wrong():
+def test_KS_distance_is_worse_when_power_law_exponent_is_wrong_continuous():
     # Generate an EPL1 random sample
     n_pl = 1000
     xmin_pl, xmax_pl = 1, 100

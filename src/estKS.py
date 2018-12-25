@@ -16,8 +16,8 @@ def estKS(X, xmin, xmax, alpha, X_dattype):
         tX_left_CDF = np.arange(len(tX)) / len(tX)
         tX_right_CDF = np.arange(1,len(tX)+1) / len(tX)
         # Compute theoretical PDF
+        abs_alpha = np.absolute(alpha)
         if X_dattype == 'REAL':
-            abs_alpha = np.absolute(alpha)
             if abs_alpha == 1:
                 theoretical_pl_CDF = \
                     (np.log(tX)-np.log(xmin)) / (np.log(xmax)-np.log(xmin))
