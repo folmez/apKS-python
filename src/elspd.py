@@ -26,4 +26,8 @@ def elspd(X, m):
             # Avoid repeating the same element
             Xc[ind_closest_nbor] = -1;
 
+    # Reshape the output array to 2D-row
+    LmX = LmX.reshape(1, len(LmX))
+
+    # Sort and return
     return np.sort(LmX)
