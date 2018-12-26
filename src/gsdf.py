@@ -20,7 +20,7 @@ def gsdf(*varargin):
     rng_seed = time_now.hour*10000000 + time_now.microsecond
     np.random.seed(rng_seed)
 
-    # Mlodel
+    # Model
     if data_type == 'EPL1':
         # Exact power-law in an interval
         alpha_pl = varargin[1]     # power-law exponent
@@ -38,20 +38,41 @@ def gsdf(*varargin):
     elif data_type == 'EPL2':
         # Exact power-law in an interval with sharp transitions to non-PL
         alpha_pl = varargin[1]          # power-law exponent
-        # ??? Write this in one line
-        if len(varargin[2]) == 2:
-            t0 = 0
-        elif len(varargin[2]) ==3:
-            t0 = varargin[2][0]
+        t0 = 0 if len(varargin[2]) == 2 else varargin[2][0] # absolute lower-bound
         xmin_pl = varargin[2][-2]       # power-law lower bound
         M_pl = varargin[2][-1]          # power-law upper bound
 
         # The exponential decay in the tail
-        beta = alpha * np.log_natural(M_pl/xmin_pl) / (M_pl-xmin_pl)
+        beta = alpha_pl * np.log(M_pl/xmin_pl) / (M_pl-xmin_pl)
 
         # Set random sample title
-        data_title = \
-            f"EPL2({n_data}pts): PL({alpha_pl}) in [{xmin_pl}, {M_pl}], exp({beta}) otherwise"
+        data_title = "EPL2({}pts): ".format(n_data) + \
+                        "PL({}) ".format(alpha_pl) + \
+                        "in [{}, {}], ".format(xmin_pl, M_pl) + \
+                        "exp({}) otherwise".format(beta)
+
+        # Compute coefficients A and C that guarantee continuity and probability
+        mat_coeffs = [ [np.exp((-1)*beta*M_pl), (-1)*M_pl**((-1)*alpha_pl)],
+                [(np.exp((-1)*beta*t0)+np.exp((-1)*beta*M_pl)-np.exp((-1)*beta*xmin_pl)) / beta, \
+                 (M_pl**(1-alpha_pl)-xmin_pl**(1-alpha_pl)) / (1-alpha_pl)] ]
+
+        # 0 - continuity condition, 1 - probability cond
+        [A, C] = np.linalg.solve(mat_coeffs, [0, 1])
+
+        # Generate random sample by inverse sampling
+        U = np.random.rand(n_data)
+        T = np.zeros(n_data)
+        CDF_at_xmin = A/(-beta)*(np.exp(-beta*xmin_pl)-np.exp(-beta*t0))
+        CDF_at_M = CDF_at_xmin + C/(1-alpha_pl) * \
+                                    (M_pl**(1-alpha_pl)-xmin_pl**(1-alpha_pl))
+        idx = U < CDF_at_xmin
+        T[idx] = (-1)/beta * np.log((-1)*beta/A*U[idx] + np.exp((-1)*beta*t0))
+        idx = (U <= CDF_at_M) & (U >= CDF_at_xmin)
+        T[idx] = ((1-alpha_pl)/C*(U[idx]-CDF_at_xmin) + \
+                                    xmin_pl**(1-alpha_pl))**(1/(1-alpha_pl))
+        idx = U > CDF_at_M
+        T[idx] = (-1)/beta * np.log(-beta/A*(U[idx]-CDF_at_M) + \
+                                                            np.exp(-beta*M_pl))
 
     else:
         print('Unexpected data name')
@@ -69,6 +90,11 @@ def gsdf(*varargin):
             tPDFn[(xmin_pl <= PDFx) & (PDFx < M_pl)] = \
             C_pl / (PDFx[(xmin_pl <= PDFx) & (PDFx <= M_pl)] ** alpha_pl)
             tPDFn[M_pl <= PDFx] = 0
+        elif data_type == 'EPL2':
+            tPDFn[PDFx < xmin_pl] = A*np.exp((-1)*beta*PDFx[PDFx<xmin_pl])
+            tPDFn[(xmin_pl <= PDFx) & (PDFx < M_pl)] = C * \
+                (PDFx[(xmin_pl <= PDFx) & (PDFx < M_pl)])**((-1)*alpha_pl)
+            tPDFn[M_pl <= PDFx] = A*np.exp((-1)*beta*PDFx[M_pl <= PDFx])
 
         # Plot true PDF
         theoretical_PDF_title = 'Theoretical PDF'

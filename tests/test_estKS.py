@@ -1,14 +1,14 @@
 import numpy as np
 import src
+import samples
 
 def test_KS_distance_is_worse_when_power_law_exponent_is_wrong_continuous():
-    # Generate an EPL1 random sample
-    n_pl = 1000
-    xmin_pl, xmax_pl = 1, 100
-    alpha_pl = 2
-    plot_sample = False
-    X = src.gsdf('EPL1', alpha_pl, [xmin_pl, xmax_pl], n_pl, plot_sample)
+    assert_KS_estimation_works(samples.X_EPL1, samples.xmin_EPL1, \
+                                        samples.xmax_EPL1, samples.alpha_EPL1)
+    assert_KS_estimation_works(samples.X_EPL2, samples.xmin_EPL2, \
+                                        samples.xmax_EPL2, samples.alpha_EPL2)
 
+def assert_KS_estimation_works(X, xmin_pl, xmax_pl, alpha_pl):
     # Compute KS distance between X and true power-law
     KS_dist = src.estKS(X, xmin_pl, xmax_pl, alpha_pl, 'REAL')
 
