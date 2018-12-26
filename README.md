@@ -3,8 +3,10 @@ Python scripts for the apKS project
 
 TO-DO
 
-1) Implement random samples other than EPL1
+1) Add EPL2 to all tests
+2) Implement random samples other than EPL1 and EPL2
 
+- December 26, 2018: EPL2 implemented. Input interval is tested for errors in synthetic data generation.
 - December 25, 2018: p-value estimation is implemented
 - December 25, 2018: KS method for bounded power-law fitting implemented
 - December 24, 2018: Semiparametric bootstrap sample generation implemented

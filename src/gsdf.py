@@ -26,6 +26,11 @@ def gsdf(*varargin):
         alpha_pl = varargin[1]     # power-law exponent
         xmin_pl = varargin[2][0]   # power-law upper bound
         M_pl = varargin[2][1]      # power-law lower bound
+
+        # Check bounds
+        if len(varargin[2]) is not 2:
+            raise IncorrectBounds
+
         # Set random sample title
         data_title = \
                 f"EPL1({n_data}pts): PL({alpha_pl}) in [{xmin_pl}, {M_pl}]"
@@ -106,3 +111,13 @@ def gsdf(*varargin):
 
     # Return a sorted random sample
     return np.sort(T)
+
+### ERRORS
+
+class Error(Exception):
+    """Base class for other exceptions"""
+    pass
+
+class IncorrectBounds(Error):
+    """Raised when inputted bounds for random sample generation are off"""
+    pass
