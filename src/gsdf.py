@@ -11,7 +11,7 @@ def gsdf(*varargin):
     # GSDF generates synthetic data using CDF.
 
     # Input arguments
-    data_type = varargin[0]
+    sample_rule = varargin[0]
     n_data = varargin[3]
     plot_log_log_pdf = varargin[4]
 
@@ -21,7 +21,7 @@ def gsdf(*varargin):
     np.random.seed(rng_seed)
 
     # Model
-    if data_type == 'EPL1':
+    if sample_rule == 'EPL1':
         # Exact power-law in an interval
         alpha_pl = varargin[1]     # power-law exponent
         xmin_pl = varargin[2][0]   # power-law upper bound
@@ -40,7 +40,7 @@ def gsdf(*varargin):
         U = np.random.rand(n_data)
         T = ((1-alpha_pl) * U/C_pl + xmin_pl**(1-alpha_pl)) ** (1/(1-alpha_pl))
 
-    elif data_type == 'EPL2':
+    elif sample_rule == 'EPL2':
         # Exact power-law in an interval with sharp transitions to non-PL
         alpha_pl = varargin[1]          # power-law exponent
         t0 = 0 if len(varargin[2]) == 2 else varargin[2][0] # absolute lower-bound
@@ -90,12 +90,12 @@ def gsdf(*varargin):
 
         # Calculate true PDF
         tPDFn = np.zeros(len(PDFx))
-        if data_type == 'EPL1':
+        if sample_rule == 'EPL1':
             tPDFn[PDFx < xmin_pl] = 0
             tPDFn[(xmin_pl <= PDFx) & (PDFx < M_pl)] = \
             C_pl / (PDFx[(xmin_pl <= PDFx) & (PDFx <= M_pl)] ** alpha_pl)
             tPDFn[M_pl <= PDFx] = 0
-        elif data_type == 'EPL2':
+        elif sample_rule == 'EPL2':
             tPDFn[PDFx < xmin_pl] = A*np.exp((-1)*beta*PDFx[PDFx<xmin_pl])
             tPDFn[(xmin_pl <= PDFx) & (PDFx < M_pl)] = C * \
                 (PDFx[(xmin_pl <= PDFx) & (PDFx < M_pl)])**((-1)*alpha_pl)

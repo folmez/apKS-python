@@ -1,16 +1,18 @@
 import numpy as np
 import src
+import samples
 
 def test_penKS_works_ok_continous_zero_penalty_case():
-    # Generate an array of exponents from 1.10 to 3.00 with stepsize 0.10
-    alpha_pl_vec = np.arange(1.1, 2.00, 0.1)
+    assert_penKS_works('EPL1', samples.bounds_EPL1, samples.n_EPL1)
+    assert_penKS_works('EPL2', samples.bounds_EPL2, samples.n_EPL2)
 
-    # Generate an EPL1 random sample
-    n_pl = 2000
-    xmin_pl, xmax_pl = 1, 100
+def assert_penKS_works(sample_rule, bounds_pl, n):
+    # Generate an array of exponents
+    alpha_pl_vec = np.arange(1.1, 3.00, 0.1)
+
     plot_sample = False
-
+    relative_tolerance = 0.10
     for a in alpha_pl_vec:
-        X = src.gsdf('EPL1', a, [xmin_pl, xmax_pl], n_pl, plot_sample)
-        alpha_hat, _, _, _, _ = src.penKS(X, 'REAL')
-        np.testing.assert_almost_equal(a, alpha_hat, decimal=1)
+        X = src.gsdf(sample_rule, a, bounds_pl, n, plot_sample)
+        a_hat, _, _, _, _ = src.penKS(X, 'REAL')
+        np.testing.assert_allclose(a_hat, a, rtol = relative_tolerance)

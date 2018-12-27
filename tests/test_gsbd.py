@@ -13,8 +13,10 @@ def assert_sb_works(X, xmin_pl, xmax_pl, alpha_pl):
     s_xmin, s_xmax = xmin_pl * 2, xmax_pl / 2
 
     # Check whether new power-law is in the sample
+    relative_tolerance = 0.10
     for s_alpha in [1.0, 1.5, 2.5]:
-        for dat_type in ['REAL']:
+        for dat_type in ['REAL', 'INTS']:
             sX = src.gsbd(X, s_alpha, s_xmin, s_xmax, dat_type)
             s_alpha_hat = src.estexp(sX, s_xmin, s_xmax, dat_type)
-            np.testing.assert_almost_equal(s_alpha, s_alpha_hat, decimal=1)
+            np.testing.assert_allclose(s_alpha_hat, s_alpha, \
+                                                    rtol = relative_tolerance)
