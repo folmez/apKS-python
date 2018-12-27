@@ -7,6 +7,8 @@ def test_KS_distance_is_worse_when_power_law_exponent_is_wrong_continuous():
                                         samples.xmax_EPL1, samples.alpha_EPL1)
     assert_KS_estimation_works(samples.X_EPL2, samples.xmin_EPL2, \
                                         samples.xmax_EPL2, samples.alpha_EPL2)
+    assert_KS_estimation_works(samples.X_EPL3, samples.xmin_EPL3, \
+                                        samples.xmax_EPL3, samples.alpha_EPL3)
 
 def assert_KS_estimation_works(X, xmin_pl, xmax_pl, alpha_pl):
     # Compute KS distance between X and true power-law

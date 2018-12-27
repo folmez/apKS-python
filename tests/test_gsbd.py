@@ -7,6 +7,8 @@ def test_semiparametric_bootstrap_sample_generation():
                                         samples.xmax_EPL1, samples.alpha_EPL1)
     assert_sb_works(samples.X_EPL2, samples.xmin_EPL2, \
                                         samples.xmax_EPL2, samples.alpha_EPL2)
+    assert_sb_works(samples.X_EPL3, samples.xmin_EPL3, \
+                                        samples.xmax_EPL3, samples.alpha_EPL3)
 
 def assert_sb_works(X, xmin_pl, xmax_pl, alpha_pl):
     # Semiparametric bootstrap sample parameters

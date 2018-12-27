@@ -15,3 +15,11 @@ bounds_EPL2 = [t0, xmin_EPL2, xmax_EPL2]
 alpha_EPL2 = 1.5
 plot_sample = False
 X_EPL2 = src.gsdf('EPL2', alpha_EPL2, [t0, xmin_EPL2, xmax_EPL2], n_EPL2, plot_sample)
+
+# Generate an EPL3 random sample
+n_EPL3 = 2000
+mu_EPL3, xmin_EPL3, xmax_EPL3 = -1, 1, 100
+bounds_EPL3 = [mu_EPL3, xmin_EPL3, xmax_EPL3]
+alpha_EPL3 = 1.5
+plot_sample = False
+X_EPL3 = src.gsdf('EPL3', alpha_EPL3, [mu_EPL3, xmin_EPL3, xmax_EPL3], n_EPL3, plot_sample)

@@ -7,12 +7,14 @@ def test_power_law_estimation_for_continuous_samples():
                         samples.n_EPL1, samples.xmin_EPL1, samples.xmax_EPL1)
     assert_exponent_estimation_works('EPL2', samples.bounds_EPL2, \
                         samples.n_EPL2, samples.xmin_EPL2, samples.xmax_EPL2)
+    assert_exponent_estimation_works('EPL3', samples.bounds_EPL3, \
+                        samples.n_EPL3, samples.xmin_EPL3, samples.xmax_EPL3)
 
 def assert_exponent_estimation_works(sample_rule, bounds_pl, n, xmin_pl, xmax_pl):
     plot_sample = False
 
     # Generate an array of exponents
-    alpha_pl_vec = np.arange(1.1, 3.00, 0.01) # about 200 choices
+    alpha_pl_vec = np.arange(1.1, 3.00, 0.1) # about 20 choices
 
     relative_tolerance = 0.10
     for a in alpha_pl_vec:

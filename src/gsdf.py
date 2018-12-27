@@ -4,8 +4,8 @@
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
+
 import src
-# from papod import papod
 
 def gsdf(*varargin):
     # GSDF generates synthetic data using CDF.
@@ -79,8 +79,50 @@ def gsdf(*varargin):
         T[idx] = (-1)/beta * np.log(-beta/A*(U[idx]-CDF_at_M) + \
                                                             np.exp(-beta*M_pl))
 
+    elif sample_rule == 'EPL3':
+        # Exact power-law in an interval with smooth transitions to non-PL
+        alpha_pl = varargin[1]          # power-law exponent
+        mu, xmin_pl, M_pl = varargin[2] # log-normal(mu,sigma) and power-law bounds
+
+        # continuous slope at xmin_pl
+        try:
+            sigma = np.sqrt((np.log(xmin_pl)-mu)/(alpha_pl-1))
+        except:
+            raise EPL3_ERROR
+        # continuous slope at M_pl
+        beta = alpha_pl/M_pl
+
+        # Set random sample title
+        data_title = "EPL3({}pts): ".format(n_data) + \
+                        "0 < log-n({},{}) < ".format(mu, sigma) + \
+                        "PL({}) < ".format(alpha_pl) + \
+                        "{} < ".format(M_pl) + \
+                        "exp({})".format(beta)
+
+        # Compute coefficients A, C and L for continuity and probability
+        mat_coeffs = [[np.exp((-1)*beta*M_pl) , (-1)*M_pl**((-1)*alpha_pl) , 0], \
+                        [0 , xmin_pl**((-1)*alpha_pl) , (-1)*src.my_lognorm_pdf(xmin_pl,mu,sigma)], \
+                            [np.exp((-1)*beta*M_pl)/beta , \
+                            (M_pl**(1-alpha_pl)-xmin_pl**(1-alpha_pl))/(1-alpha_pl) , \
+                            src.my_lognorm_cdf(xmin_pl,mu,sigma)]]
+        [A, C, L] = np.linalg.solve(mat_coeffs, [0, 0, 1])
+
+        # Generate random sample by inverse sampling
+        U = np.random.rand(n_data)
+        T = np.zeros(n_data)
+        CDF_at_xmin = L * src.my_lognorm_cdf(xmin_pl, mu, sigma)
+        CDF_at_M = CDF_at_xmin + \
+                    C * (M_pl**(1-alpha_pl)-xmin_pl**(1-alpha_pl))/(1-alpha_pl)
+        T[U<=CDF_at_xmin] = src.my_lognorm_inv_cdf( \
+                                            U[U<=CDF_at_xmin]*1/L, mu, sigma)
+        T[(U<=CDF_at_M) & (U>CDF_at_xmin)] = \
+                    ( (U[(U<=CDF_at_M) & (U>CDF_at_xmin)] - CDF_at_xmin) * \
+                        (1-alpha_pl)/C + xmin_pl**(1-alpha_pl) )**(1/(1-alpha_pl))
+        T[U>CDF_at_M] = (-1)/beta * np.log( (-1) * (beta/A) * \
+                        (U[U>CDF_at_M] - CDF_at_M - A*np.exp(-beta*M_pl)/beta) )
+
     else:
-        print('Unexpected data name')
+        raise UNEXPECTED_SAMPLE_NAME_ERROR
 
     # Plot
     if plot_log_log_pdf:
@@ -100,6 +142,13 @@ def gsdf(*varargin):
             tPDFn[(xmin_pl <= PDFx) & (PDFx < M_pl)] = C * \
                 (PDFx[(xmin_pl <= PDFx) & (PDFx < M_pl)])**((-1)*alpha_pl)
             tPDFn[M_pl <= PDFx] = A*np.exp((-1)*beta*PDFx[M_pl <= PDFx])
+        elif sample_rule == 'EPL3':
+            tPDFn[PDFx < xmin_pl] =  L * \
+                        src.my_lognorm_pdf(PDFx[PDFx < xmin_pl], mu, sigma)
+            tPDFn[(xmin_pl <= PDFx) & (PDFx < M_pl)] = C * \
+                (PDFx[(xmin_pl <= PDFx) & (PDFx < M_pl)])**((-1)*alpha_pl)
+            tPDFn[M_pl <= PDFx] = A * np.exp((-1)*beta*PDFx[M_pl <= PDFx])
+
 
         # Plot true PDF
         theoretical_PDF_title = 'Theoretical PDF'
@@ -121,3 +170,9 @@ class Error(Exception):
 class IncorrectBounds(Error):
     """Raised when inputted bounds for random sample generation are off"""
     pass
+
+class UNEXPECTED_SAMPLE_NAME_ERROR(Error):
+    """Raised when inputted sample name is wrong"""
+
+class EPL3_ERROR(Error):
+    """Raised when something goes wrong in the generation of an EPL3 sample"""

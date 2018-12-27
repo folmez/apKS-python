@@ -7,5 +7,6 @@ from .gsdf import gsdf
 from .gsbd import gsbd
 from .penKS import penKS
 from .estpval import estpval
+from .helpers import my_lognorm_cdf, my_lognorm_pdf, my_lognorm_inv_cdf
 
 P_VAL_THRESHOLD = 0.10

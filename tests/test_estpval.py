@@ -18,6 +18,8 @@ def test_estpval():
                                     samples.bounds_EPL1, samples.n_EPL1)
     assert_pval_estimation_works('EPL2', samples.alpha_EPL2, \
                                     samples.bounds_EPL2, samples.n_EPL2)
+    assert_pval_estimation_works('EPL3', samples.alpha_EPL3, \
+                                    samples.bounds_EPL3, samples.n_EPL3)
 
 def assert_pval_estimation_works(sample_rule, alpha_pl, bounds_pl, n):
     # Generate data, estimate power-law fit, validate fit and count
