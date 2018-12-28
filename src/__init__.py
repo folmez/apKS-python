@@ -5,7 +5,7 @@ from .estKS import estKS
 from .papod import papod
 from .gsdf import gsdf
 from .gsbd import gsbd
-from .penKS import penKS
+from .penKS import penKS, calc_penalized_KS_metric
 from .estpval import estpval
 from .helpers import my_lognorm_cdf, my_lognorm_pdf, my_lognorm_inv_cdf
 
