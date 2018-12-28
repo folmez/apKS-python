@@ -42,7 +42,7 @@ def estpval(X, X_dattype, alpha, xmin, xmax, qof_val, nr_reps=25, \
             sb_X = src.gsbd(X, alpha, xmin, xmax, X_dattype)
 
             # Determine a power-law-fit based on KS metric
-            sb_pl_alpha, sb_pl_xmin, sb_pl_xmax, sb_pl_KS_val, _ = \
+            sb_pl_alpha, sb_pl_xmin, sb_pl_xmax, sb_pl_KS_val = \
                 src.penKS(sb_X, X_dattype, pen_slope=0, \
                 min_nr_trial_pts_in_a_decade=min_nr_trial_pts_in_a_decade, \
                 interval_length_threshold=interval_length_threshold)

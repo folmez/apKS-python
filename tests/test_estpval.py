@@ -30,7 +30,7 @@ def assert_pval_estimation_works(sample_rule, alpha_pl, bounds_pl, n):
         X = src.gsdf(sample_rule, alpha_pl, bounds_pl, n, plot_sample)
 
         # Estimate a power-law fit using KS method bounded power-law fit
-        alpha_hat, xmin_hat, xmax_hat, KS_val, _ = src.penKS(X, 'REAL')
+        alpha_hat, xmin_hat, xmax_hat, KS_val = src.penKS(X, 'REAL')
 
         # Increment count if p-value is greater than the p-value threshold
         if src.P_VAL_THRESHOLD < \

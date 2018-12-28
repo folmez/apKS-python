@@ -30,6 +30,7 @@ def test_penalty_matrix_computation():
     Test whether the penalty term computation works as expected
     """
     pen = 0.1
+
     KS_mat = np.zeros([3, 4])
     xmin_vec = np.asarray([1.0, 2.0, 3.0])
     xmax_vec = np.asarray([4.0, 5.0, 6.0, 7.0])
@@ -48,7 +49,28 @@ def test_penalty_matrix_computation():
                                 (-1)*pen*np.log(xmax_vec[2]/xmin_vec[2]), \
                                 (-1)*pen*np.log(xmax_vec[3]/xmin_vec[2]), \
                                 ]])
+    np.testing.assert_array_almost_equal(penalty_term, \
+        src.calc_penalized_KS_metric(KS_mat, pen, xmin_vec, xmax_vec), \
+        decimal=16)
 
+    KS_mat = np.zeros([1, 4])
+    xmin_vec = np.asarray([3.0])
+    xmax_vec = np.asarray([4.0, 5.0, 6.0, 7.0])
+    penalty_term = np.asarray([[(-1)*pen*np.log(xmax_vec[0]/xmin_vec[0]), \
+                                (-1)*pen*np.log(xmax_vec[1]/xmin_vec[0]), \
+                                (-1)*pen*np.log(xmax_vec[2]/xmin_vec[0]), \
+                                (-1)*pen*np.log(xmax_vec[3]/xmin_vec[0]), \
+                                ]])
+    np.testing.assert_array_almost_equal(penalty_term, \
+        src.calc_penalized_KS_metric(KS_mat, pen, xmin_vec, xmax_vec), \
+        decimal=16)
+
+    KS_mat = np.zeros([3, 1])
+    xmin_vec = np.asarray([1.0, 2.0, 3.0])
+    xmax_vec = np.asarray([4.0])
+    penalty_term = np.asarray([[(-1)*pen*np.log(xmax_vec[0]/xmin_vec[0])], \
+                                [(-1)*pen*np.log(xmax_vec[0]/xmin_vec[1])], \
+                                [(-1)*pen*np.log(xmax_vec[0]/xmin_vec[2])]])
     np.testing.assert_array_almost_equal(penalty_term, \
         src.calc_penalized_KS_metric(KS_mat, pen, xmin_vec, xmax_vec), \
         decimal=16)

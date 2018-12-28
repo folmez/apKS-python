@@ -8,5 +8,9 @@ src/__init__.py
 src/elspd.py
 src/estKS.py
 src/estexp.py
+src/estpval.py
+src/gsbd.py
 src/gsdf.py
+src/helpers.py
 src/papod.py
+src/penKS.py
