@@ -69,7 +69,11 @@ def penKS(X, X_dattype, xmin_vec=0, xmax_vec=0, \
                 # Break out when the interval converged
                 break
             elif count > TWO_STEP_DETECTION_MAX_RECURSION_DEPTH:
+                # Raise an error if it does not converge for too long
                 raise RecursionError('Two-step detection did not converge!')
+            else:
+                # Update power-law bounds
+                xmin_hat, xmax_hat = new_xmin_hat, new_xmax_hat
 
     return alpha_hat, xmin_hat, xmax_hat, KS_val
 

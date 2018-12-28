@@ -5,6 +5,8 @@ TO-DO
 
 1) EPL3 tests fail sporadically because exponent errors are larger than tolerance.
 This is not unexpected as the power-law in EPL3 is hard to detect. Find better testing approaches.
+2) Implement data type (REAL or INTS) detection in apKS
+3) Go over discrete data (INTS) handling, src and tests
 
 - December 28, 2018: Penalized KS method for power-law fitting is completely implemented
 - December 27, 2018: EPL3 fully implemented.

@@ -9,8 +9,8 @@ bounded power-law will be tested. Not each of these random samples will contain
 a valid power-law. Therefore, the assertion will be that the fraction of valid
 power-laws is greater than a fraction
 """
-NR_TRIALS = 10
-VALID_POWER_LAW_FRACTION_MIN = 0.5
+NR_TRIALS = 2
+VALID_POWER_LAW_FRACTION_MIN = 0.49
 
 @pytest.mark.slow
 def test_estpval():
@@ -37,4 +37,11 @@ def assert_pval_estimation_works(sample_rule, alpha_pl, bounds_pl, n):
                 src.estpval(X, 'REAL', alpha_hat, xmin_hat, xmax_hat, KS_val):
             valid_power_law_count = valid_power_law_count + 1
 
-    assert valid_power_law_count/NR_TRIALS > VALID_POWER_LAW_FRACTION_MIN
+        # Quit early if goal is achieved
+        if goal_is_achieved(valid_power_law_count, NR_TRIALS, VALID_POWER_LAW_FRACTION_MIN):
+            break
+
+    assert goal_is_achieved(valid_power_law_count, NR_TRIALS, VALID_POWER_LAW_FRACTION_MIN)
+
+def goal_is_achieved(valid_power_law_count, NR_TRIALS, VALID_POWER_LAW_FRACTION_MIN):
+    return valid_power_law_count/NR_TRIALS > VALID_POWER_LAW_FRACTION_MIN

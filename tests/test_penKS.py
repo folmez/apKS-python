@@ -22,7 +22,7 @@ def assert_penKS_works(sample_rule, bounds_pl, n):
         np.testing.assert_allclose(a_hat, a, rtol = relative_tolerance)
 
         # Test penalized KS method for bounded power-law fitting with a tiny penalty
-        a_hat, _, _, _ = src.penKS(X, 'REAL', pen_slope = 0.000001)
+        a_hat, _, _, _ = src.penKS(X, 'REAL', pen_slope = 1e-4)
         np.testing.assert_allclose(a_hat, a, rtol = relative_tolerance)
 
 def test_penalty_matrix_computation():
