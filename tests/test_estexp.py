@@ -28,7 +28,7 @@ def assert_exponent_estimation_works(sample_rule, bounds_pl, n, xmin_pl, xmax_pl
 
 def test_power_law_estimation_for_discrete_EPL1_samples():
     # Generate an array of exponents from 1.10 to 3.00 with stepsize 0.10
-    alpha_pl_vec = np.arange(1.1, 3.00, 0.1)
+    alpha_pl_vec = np.asarray([1.5, 2.0, 2.5, 3.0])
 
     # Define random sample generation parameters
     n_pl = 1000

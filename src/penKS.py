@@ -90,9 +90,9 @@ def find_power_law_fit(X, X_dattype, xmin_vec, xmax_vec, \
     for i, xmin in enumerate(xmin_vec):
         for j, xmax in enumerate(xmax_vec):
             xmin_is_smaller = xmin < xmax
-            interval_has_data = np.sum((X<xmin) | (xmax<X)) > 2
             interval_is_long = xmax/xmin >= interval_length_threshold
-            if xmin_is_smaller and interval_has_data and interval_is_long:
+            if xmin_is_smaller and interval_is_long and \
+                                            interval_has_data(X, xmin, xmax):
                 alpha_mat[i,j] = src.estexp(X, xmin, xmax, X_dattype)
                 KS_mat[i,j] = src.estKS(X, xmin, xmax, alpha_mat[i,j], X_dattype)
             else:
@@ -119,3 +119,6 @@ def calc_penalized_KS_metric(KS_mat, pen_slope, xmin_vec, xmax_vec):
 
     # Add penalty to KS metric values
     return KS_mat + penalty
+
+def interval_has_data(X, xmin, xmax):
+    return np.sum((xmin <= X) & (X <= xmax)) > 2

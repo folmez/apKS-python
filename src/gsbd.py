@@ -21,7 +21,7 @@ def gsbd(X, alpha, xmin, xmax, X_data_type):
 
     # (i) Choose elements from the non-power-law subset with prob. n_non_pl / n
     n1 = sum(np.random.rand(n) < n_non_pl / n)
-    sbX1 = np.random.choice(X_non_pl, size=n1, replace=True)
+    sbX1 = generate_non_power_law_sample(X_non_pl, n1)
 
     # (ii) Generate a power-law distributed sample of size n-n1
     n2 = n-n1
@@ -43,3 +43,12 @@ def gen_power_law_sample(a, xmin, xmax, n):
         return (U * (xmax**b-xmin**b) + xmin**b) ** (1.0/b)
     else:
         return np.exp( U * (np.log(xmax)-np.log(xmin)) + np.log(xmin) )
+
+def generate_non_power_law_sample(X_non_pl, n1):
+    if n1 > 0:
+        return np.random.choice(X_non_pl, size=n1, replace=True)
+    elif n1 == 0:
+        return []
+    else:
+        raise ValueError('Something went terribly wrong in ' + \
+                            'semiparametric boostrap sample generation.')

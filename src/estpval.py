@@ -67,6 +67,6 @@ def estpval(X, X_dattype, alpha, xmin, xmax, qof_val, nr_reps=25, \
                     "power-law fit ({:1.2f},{:1.2f}) ".format(xmin, xmax) + \
                     "is too high. (>{:3.4f})".format(reasonable_KS_upper_limit))
             print("Rejected without estimating p-value")
-        p_val = np.inf
+        p_val = -1.00
 
     return p_val

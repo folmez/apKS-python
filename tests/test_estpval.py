@@ -12,6 +12,10 @@ power-laws is greater than a fraction
 NR_TRIALS = 2
 VALID_POWER_LAW_FRACTION_MIN = 0.49
 
+def test_automatic_pval_estimation_fail_due_to_very_large_KS_value():
+    print()
+    assert src.estpval(samples.X_EPL3, 'REAL', 1.21, 0.02, 91.63, 0.3053) == -1.0
+
 @pytest.mark.slow
 def test_estpval():
     assert_pval_estimation_works('EPL1', samples.alpha_EPL1, \

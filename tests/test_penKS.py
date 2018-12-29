@@ -1,7 +1,25 @@
 import numpy as np
+import pytest
 import src
 import samples
 
+def test_a_ridiculously_large_penalty_coefficient_for_EPL1():
+    # EPL1 is a pure bounded power-law, a ridiculously large penalty coefficient
+    # should return the whole sample as a valid power-law fit
+    a_hat, xmin_hat, xmax_hat, _ =  src.penKS(samples.X_EPL1, 'REAL', pen_slope = 1e5)
+    assert [xmin_hat, xmax_hat] == [np.amin(samples.X_EPL1), np.amax(samples.X_EPL1)]
+
+def test_interval_has_data():
+    assert_interval_has_data_works(samples.X_EPL1)
+    assert_interval_has_data_works(samples.X_EPL2)
+    assert_interval_has_data_works(samples.X_EPL3)
+
+def assert_interval_has_data_works(X):
+    assert src.interval_has_data(X, np.amin(X), np.amax(X)) == True
+    assert src.interval_has_data(X, 0.1 * np.amin(X), np.amin(X)) == False
+    assert src.interval_has_data(X, np.amax(X), 10 * np.amax(X)) == False
+
+@pytest.mark.slow
 def test_penKS_works_ok_continous_zero_penalty_case():
     assert_penKS_works('EPL1', samples.bounds_EPL1, samples.n_EPL1)
     assert_penKS_works('EPL2', samples.bounds_EPL2, samples.n_EPL2)

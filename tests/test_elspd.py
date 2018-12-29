@@ -1,6 +1,6 @@
 import numpy as np
 import src
-
+import samples
 # Generate numbers from 1 to 100
 X = np.linspace(1.0, 100.0, num=100, endpoint=True)
 
@@ -18,3 +18,11 @@ def test_whether_elspd_works_correctly():
 
     # When m =100, should return the original sample
     np.testing.assert_array_equal(src.elspd(X, 100), X)
+
+def test_min_and_max_of_elspd_sets():
+    assert np.amin(src.elspd(samples.X_EPL1, 10)) == np.amin(samples.X_EPL1)
+    assert np.amax(src.elspd(samples.X_EPL1, 10)) == np.amax(samples.X_EPL1)
+    assert np.amin(src.elspd(samples.X_EPL2, 10)) == np.amin(samples.X_EPL2)
+    assert np.amax(src.elspd(samples.X_EPL2, 10)) == np.amax(samples.X_EPL2)
+    assert np.amin(src.elspd(samples.X_EPL3, 10)) == np.amin(samples.X_EPL3)
+    assert np.amax(src.elspd(samples.X_EPL3, 10)) == np.amax(samples.X_EPL3)
