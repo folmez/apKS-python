@@ -1,43 +1,34 @@
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+import src
 
-def papod(*varargin):
+"""
+PAPOD(X) plots the approximate pdf of the given data set X using
+logarithmic binning and plots a bounded power-law fit on top if provided.
+"""
 
-    # Input arguments
-    X = varargin[0]
+def papod(X, power_law_fit=0, nr_bins=0, data_title='Untitled data', \
+                                                            plot_stuff=True):
 
-    data_title = 'Untitled data'
-    nr_bins = np.amin([round(len(X)*0.1), 50])
+    # Approximate PDF plot parameters
     density_color = 'b'
-    plot_stuff = True
+    if nr_bins is 0:
+        nr_bins = get_default_number_of_bins(len(X))
 
-    i = 1
-    while i < len(varargin):
-        if varargin[i] == 'data_title':
-            data_title = varargin[i+1]
-        elif varargin[i] == 'nr_bins':
-            nr_bins = varargin[i+1]
-        elif varargin[i] == 'power-law fit':
-            [alpha, xmin, xmax] = varargin[i+1][0:3]
-            if len(varargin[i+1]) == 3:
-                von = 1 # assume statistically valid
-            else:
-                von = varargin[i+1][3] # statistical validity inputted
-        elif varargin[i] == 'plot_stuff':
-            plot_stuff = varargin[i+1]
-        else:
-            print('Input:', varargin[i])
-            print('Error in <papod.py>: Unexpected inputs!')
-            sys.exit(1)
-        i = i+2
+    # Power-law fit parameters
+    if power_law_fit is not 0:
+        a_power_law_fit_is_inputted = True
+        alpha, xmin, xmax = power_law_fit[0:3]
+        # Assume statistically valid if it is not specified
+        fit_is_valid = True if len(power_law_fit) == 3 else power_law_fit[3]
+    else:
+        a_power_law_fit_is_inputted = False
+    pl_fit_linestyle = '-' if fit_is_valid else '--'
 
-    # Stop if data sample contains 0
-    try:
-        np.testing.assert_equal(0 not in X, True)
-    except DataSetContainsZero:
-        print('Error in <papod.py>: Your data set contains zero!')
-        sys.exit(1)
+    # Data sample must not contain 0
+    if 0 in X:
+        raise ValueError('Data set contains zero!')
 
     # Model
     n = len(X)
@@ -63,12 +54,9 @@ def papod(*varargin):
     approximate_PDF_label = f'Approx PDF ({n} pts)'
     approx_PDF_fig = plt.figure()
     plt.loglog(Xx, Xn, 'b.', basex=10, basey=10, label=approximate_PDF_label)
-    try:
-        xmin
-    except NameError:
-        # xmin is not defined
-        pass
-    else:
+
+    # Plot power-law fit according to inputted power-law fit parameters
+    if a_power_law_fit_is_inputted:
         i1 = np.where(Xx >= xmin)[0][0]   # first idx in the power-law region
         i2 = np.where(Xx <= xmax)[0][-1]   # last idx in the power-law region
 
@@ -77,13 +65,17 @@ def papod(*varargin):
         y1 = C_hat * 1 / (xmax ** alpha)
         pl_vs_data_percentage = \
                         np.round(np.sum((xmin <= X) & (X <= xmax)) / len(X) *100)
-        pl_fit_title = \
-                f'PL(%{pl_vs_data_percentage}):[{xmin},{xmax}], alpha={alpha}'
-        plt.loglog([xmin, xmax], [y0, y1], 'ro-',\
+        pl_fit_title = f'PL(%{pl_vs_data_percentage:2.0f}):[{xmin:.2f},{xmax:.2f}], alpha={alpha:1.2f}'
+        plt.loglog([xmin, xmax], [y0, y1], 'ro'+pl_fit_linestyle,\
                                     label=pl_fit_title, linewidth=2.0)
+
+    # Put data title, legend on plot and then show the plot
     plt.title(data_title)
     plt.legend()
     if plot_stuff:
         plt.show()
 
     return Xn, Xx, approx_PDF_fig
+
+def get_default_number_of_bins(n):
+    return np.amin([round(n*0.1), src.MAX_NUM_OF_BINS])

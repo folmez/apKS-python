@@ -32,8 +32,8 @@ def gsdf(*varargin):
             raise IncorrectBounds
 
         # Set random sample title
-        data_title = \
-                f"EPL1({n_data}pts): PL({alpha_pl}) in [{xmin_pl}, {M_pl}]"
+        data_title = f"EPL1({n_data}pts): " + \
+                        f"PL({alpha_pl:1.2f}) in [{xmin_pl:.2f}, {M_pl:.2f}]"
 
         # Generate random sample
         C_pl = (1-alpha_pl) / (M_pl**(1-alpha_pl) - xmin_pl**(1-alpha_pl))
@@ -51,10 +51,9 @@ def gsdf(*varargin):
         beta = alpha_pl * np.log(M_pl/xmin_pl) / (M_pl-xmin_pl)
 
         # Set random sample title
-        data_title = "EPL2({}pts): ".format(n_data) + \
-                        "PL({}) ".format(alpha_pl) + \
-                        "in [{}, {}], ".format(xmin_pl, M_pl) + \
-                        "exp({}) otherwise".format(beta)
+        data_title = f"EPL2({n_data}pts): " + f"PL({alpha_pl:1.2f}) " + \
+                        f"in [{xmin_pl:.2f}, {M_pl:.2f}], " + \
+                        f"exp({beta:1.2e}) otherwise"
 
         # Compute coefficients A and C that guarantee continuity and probability
         mat_coeffs = [ [np.exp((-1)*beta*M_pl), (-1)*M_pl**((-1)*alpha_pl)],
@@ -93,11 +92,11 @@ def gsdf(*varargin):
         beta = alpha_pl/M_pl
 
         # Set random sample title
-        data_title = "EPL3({}pts): ".format(n_data) + \
-                        "0 < log-n({},{}) < ".format(mu, sigma) + \
-                        "PL({}) < ".format(alpha_pl) + \
-                        "{} < ".format(M_pl) + \
-                        "exp({})".format(beta)
+        data_title = f"EPL3({n_data}pts): " + \
+                        f"0 < lognormal(mu={mu:1.2f},sigma={sigma:1.2f}) < " + \
+                        f"PL({alpha_pl:1.2f}) < " + \
+                        f"{M_pl:1.2f} < " + \
+                        f"exp({beta:1.2e})"
 
         # Compute coefficients A, C and L for continuity and probability
         mat_coeffs = [[np.exp((-1)*beta*M_pl) , (-1)*M_pl**((-1)*alpha_pl) , 0], \
@@ -159,7 +158,7 @@ def gsdf(*varargin):
         plt.show()
 
     # Return a sorted random sample
-    return np.sort(T)
+    return np.sort(T), data_title
 
 ### ERRORS
 

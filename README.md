@@ -3,11 +3,15 @@ Python scripts for the apKS project
 
 TO-DO
 
-1) EPL3 tests fail sporadically because exponent errors are larger than tolerance.
-This is not unexpected as the power-law in EPL3 is hard to detect. Find better testing approaches.
-2) Implement data type (REAL or INTS) detection in apKS
-3) Go over discrete data (INTS) handling, src and tests
+- Implement plotting theoretical PDF plotting in testing for EPL samples for apKS testing
+- Implement data type (REAL or INTS) detection in apKS
+- Go over discrete data (INTS) handling, src and tests
+- Implement the experiments in the EPL paper
+- Make a main method that parses command line input, make it read a .dat or .txt file
+- Describe how to set up the python code in the command line, what packages are needed, how to develop setup.py
 
+- January 3, 2019: Power-law fit drawing implemented into papod.py, tests updated accordingly
+- December 29, 2018: apKS completely implemented along with tests
 - December 28, 2018: Penalized KS method for power-law fitting is completely implemented
 - December 27, 2018: EPL3 fully implemented.
 - December 26, 2018: EPL2 implemented. Input interval is tested for errors in synthetic data generation.

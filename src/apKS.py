@@ -35,6 +35,8 @@ def apKS(X, data_title='Untitled data', plot_best_pl_fit=1, display_stuff=1, \
 
     # If the power-law fit for no penalty is not valid, terminate here
     if p_vals[-1]  <= src.P_VAL_THRESHOLD:
+        plot_fit(plot_best_pl_fit, X, data_title, alpha_hats[-1], \
+                        xmin_hats[-1], xmax_hats[-1], p_vals[-1])
         return alpha_hats[-1], xmin_hats[-1], xmax_hats[-1], qof_values[-1], p_vals[-1], slopes[-1]
 
     # Continue if penalized approach is needed
@@ -73,6 +75,8 @@ def apKS(X, data_title='Untitled data', plot_best_pl_fit=1, display_stuff=1, \
                 #   (ii) or a larger maximum slope should be inputted
                 if xmin_hats[-1] <= np.amin(X) and np.amax(X) <= xmax_hats[-1]:
                     # The sample can entirely be fitted with a bounded power-law
+                    plot_fit(plot_best_pl_fit, X, data_title, alpha_hats[-1], \
+                                    xmin_hats[-1], xmax_hats[-1], p_vals[-1])
                     print_summary(alpha_hats, xmin_hats, xmax_hats, qof_values, p_vals, slopes, -1)
                     return alpha_hats[-1], xmin_hats[-1], xmax_hats[-1], qof_values[-1], p_vals[-1], slopes[-1]
                 else:
@@ -115,7 +119,9 @@ def apKS(X, data_title='Untitled data', plot_best_pl_fit=1, display_stuff=1, \
         # will give us the apKS method obtained valid power-law fit
         idx = slopes.index(min_slope)
 
-        # End of the apKS method
+        # Plot power-law fit on approximate PDF, print summary and terminate
+        plot_fit(plot_best_pl_fit, X, data_title, alpha_hats[idx], \
+                                    xmin_hats[idx], xmax_hats[idx], p_vals[idx])
         print_summary(alpha_hats, xmin_hats, xmax_hats, qof_values, p_vals, slopes, idx)
         return alpha_hats[idx], xmin_hats[idx], xmax_hats[idx], qof_values[idx], p_vals[idx], slopes[idx]
 
@@ -182,6 +188,11 @@ def get_p_val_from_previous_estimations(a, x1, x2, \
 
 def these_fits_are_identical(a, b):
     return np.allclose(a, b, atol=1e-10, rtol=0)
+
+def plot_fit(plot_best_pl_fit, X, data_title, a, x1, x2, p_val):
+    if plot_best_pl_fit:
+        src.papod(X, data_title=data_title, \
+                    power_law_fit=[a, x1, x2, p_val > src.P_VAL_THRESHOLD])
 
 def print_summary(alpha_hats, xmin_hats, xmax_hats, qof_values, p_vals, slopes, i):
     print("\n\tKS_slope\talpha\tx_min\tx_max\tqof_val\tp_val")

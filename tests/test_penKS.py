@@ -33,7 +33,7 @@ def assert_penKS_works(sample_rule, bounds_pl, n):
     relative_tolerance = 0.10
     for a in alpha_pl_vec:
         # Generate a random sample
-        X = src.gsdf(sample_rule, a, bounds_pl, n, plot_sample)
+        X, _ = src.gsdf(sample_rule, a, bounds_pl, n, plot_sample)
 
         # Test KS method for bounded power-law fitting
         a_hat, _, _, _ = src.penKS(X, 'REAL')

@@ -24,9 +24,10 @@ def assert_apKS_works(sample_rule, bounds_pl, n):
     plot_sample = False
     display_p_val_stuff = False
     relative_tolerance = 0.10
+    test_title = '[apKS TEST]\n'
     for a in alpha_pl_vec:
         # Generate a random sample
-        X = src.gsdf(sample_rule, a, bounds_pl, n, plot_sample)
+        X, X_data_title = src.gsdf(sample_rule, a, bounds_pl, n, plot_sample)
 
         # Test KS method for bounded power-law fitting
         print("\n" + 80*"-")
@@ -34,5 +35,7 @@ def assert_apKS_works(sample_rule, bounds_pl, n):
                 f"alpha={a:1.2f}, " + \
                 f"[xmin, xmax] = [{bounds_pl[-2]:3.2f},{bounds_pl[-1]:3.2f}]")
         print(80*"-")
-        a_hat, _, _, _, _, _ = src.apKS(X, display_p_val_stuff=display_p_val_stuff)
-        np.testing.assert_allclose(a_hat, a, rtol = relative_tolerance)
+        a_hat, _, _, _, _, _ = src.apKS(X, \
+                                data_title=test_title + X_data_title, \
+                                display_p_val_stuff=display_p_val_stuff)
+        np.testing.assert_allclose(a_hat, a, rtol=relative_tolerance)

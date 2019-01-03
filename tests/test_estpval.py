@@ -31,7 +31,7 @@ def assert_pval_estimation_works(sample_rule, alpha_pl, bounds_pl, n):
     valid_power_law_count = 0
     for i in range(NR_TRIALS):
         # Generate data
-        X = src.gsdf(sample_rule, alpha_pl, bounds_pl, n, plot_sample)
+        X, _ = src.gsdf(sample_rule, alpha_pl, bounds_pl, n, plot_sample)
 
         # Estimate a power-law fit using KS method bounded power-law fit
         alpha_hat, xmin_hat, xmax_hat, KS_val = src.penKS(X, 'REAL')

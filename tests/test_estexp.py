@@ -19,7 +19,7 @@ def assert_exponent_estimation_works(sample_rule, bounds_pl, n, xmin_pl, xmax_pl
     relative_tolerance = 0.10
     for a in alpha_pl_vec:
         # Generate a random sample
-        X = src.gsdf(sample_rule, a, bounds_pl, n, plot_sample)
+        X, _ = src.gsdf(sample_rule, a, bounds_pl, n, plot_sample)
         # Estimate a continous power-law exponent
         a_hat = src.estexp(X, xmin_pl, xmax_pl, 'REAL')
         # Check whether estimation is close enough or not
@@ -38,7 +38,7 @@ def test_power_law_estimation_for_discrete_EPL1_samples():
     relative_tolerance = 0.10
     for a in alpha_pl_vec:
         # Generate an EPL1 random sample
-        X = src.gsdf('EPL1', a, [xmin_pl, xmax_pl], n_pl, plot_sample)
+        X, _ = src.gsdf('EPL1', a, [xmin_pl, xmax_pl], n_pl, plot_sample)
         # Estimate a discrete power-law exponent
         a_hat = src.estexp(X, xmin_pl, xmax_pl, 'INTS')
         # Check whether estimation is close enough or not
